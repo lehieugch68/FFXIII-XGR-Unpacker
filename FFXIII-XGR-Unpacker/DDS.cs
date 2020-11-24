@@ -38,5 +38,33 @@ namespace FFXIII_XGR_Unpacker
             writer.Close();
             return result.ToArray();
         }
+        public struct DDSInfo
+        {
+            public ushort Width;
+            public ushort Height;
+            public byte[] Raw;
+        }
+        public static DDSInfo GetInfo(byte[] input)
+        {
+            MemoryStream stream = new MemoryStream(input);
+            BinaryReader reader = new BinaryReader(stream);
+            DDSInfo result = new DDSInfo();
+            if (reader.ReadInt32() == 0x20534444)
+            {
+                int headerSize = reader.ReadInt32() + 4;
+                reader.BaseStream.Position += 4;
+                result.Height = reader.ReadUInt16();
+                result.Width = reader.ReadUInt16();
+                reader.BaseStream.Seek(headerSize, SeekOrigin.Begin);
+                result.Raw = reader.ReadBytes((int)(reader.BaseStream.Length - headerSize));
+            }
+            else
+            {
+                throw new Exception("The file is not a DDS file.");
+            }
+            reader.Close();
+            stream.Close();
+            return result;
+        }
     }
 }

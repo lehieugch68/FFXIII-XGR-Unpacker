@@ -109,7 +109,7 @@ namespace FFXIII_XGR_Unpacker
                     else
                     {
                         byte[] bytes = reader.ReadBytes((int)infoSize);
-                        File.WriteAllBytes($"{filePath}.{fileExt}", bytes);
+                        File.WriteAllBytes($"{filePath}", bytes);
                     }
                     Console.WriteLine($"Unpacked: {fileName}.{fileExt}");
                     reader.BaseStream.Position = current;
